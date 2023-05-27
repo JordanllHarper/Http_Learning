@@ -1,3 +1,6 @@
+use std::fmt::Debug;
+
+#[derive(Debug, PartialEq, Eq)]
 pub enum Verb {
     GET,
     PUT,
