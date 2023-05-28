@@ -4,4 +4,11 @@ pub struct InvalidBasicInfoError {
 }
 
 #[derive(Debug)]
-pub struct HttpRequestBuildError {}
+pub struct HttpRequestBuildError {
+    message: String,
+}
+
+#[derive(Debug)]
+pub struct HttpResponseBuildError {
+    message: String,
+}

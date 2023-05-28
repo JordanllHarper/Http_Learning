@@ -1,9 +1,7 @@
 pub mod parser {
-    use std::{error::Error, fmt, path::Display};
-
     use crate::{
-        errors::{HttpRequestBuildError, InvalidBasicInfoError},
-        http_request::{self, BasicInfo, HttpRequest, Verb},
+        errors::error_decl::{HttpRequestBuildError, InvalidBasicInfoError},
+        http_request::http_request::{BasicInfo, HttpRequest, Verb},
     };
 
     pub fn parse(input: &str) -> Result<HttpRequest, HttpRequestBuildError> {
@@ -11,7 +9,11 @@ pub mod parser {
         let basic_info_line = split[0];
         let basic_info = match parse_basic_info(basic_info_line) {
             Ok(b) => b,
-            Err(_) => return Err(HttpRequestBuildError::new()),
+            Err(_) => {
+                return Err(HttpRequestBuildError::new(
+                    "Couldn't build http request".to_string(),
+                ))
+            }
         };
 
         let http_request = HttpRequest::new(basic_info);
@@ -60,9 +62,10 @@ pub mod parser {
 //PARSER TESTS//
 #[cfg(test)]
 mod parser_tests {
+
     use crate::{
-        errors::InvalidBasicInfoError,
-        http_request::{BasicInfo, Verb},
+        errors::error_decl::InvalidBasicInfoError,
+        http_request::http_request::{BasicInfo, Verb},
     };
 
     use super::parser::{parse_basic_info, parse_verb};
