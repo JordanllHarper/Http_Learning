@@ -1,4 +1,6 @@
-#[derive(Debug)]
+use std::{error::Error, fmt};
+
+#[derive(Debug, PartialEq, Eq)]
 pub struct InvalidBasicInfoError {}
 
 impl fmt::Display for InvalidBasicInfoError {
@@ -11,6 +13,12 @@ impl fmt::Display for InvalidBasicInfoError {
 }
 
 impl Error for InvalidBasicInfoError {}
+
+impl InvalidBasicInfoError {
+    pub fn new() -> InvalidBasicInfoError {
+        InvalidBasicInfoError {}
+    }
+}
 #[derive(Debug)]
 pub struct HttpRequestBuildError {}
 
@@ -20,6 +28,11 @@ impl fmt::Display for HttpRequestBuildError {
             Ok(_) => Ok(()),
             Err(e) => Err(e),
         };
+    }
+}
+impl HttpRequestBuildError {
+    pub fn new() -> HttpRequestBuildError {
+        HttpRequestBuildError {}
     }
 }
 

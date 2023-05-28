@@ -8,6 +8,7 @@ pub enum Verb {
     DELETE,
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct BasicInfo {
     verb: Verb,
     uri: String,
@@ -20,6 +21,8 @@ impl BasicInfo {
 }
 
 //TODO: Add more fields
+
+#[derive(Debug, PartialEq, Eq)]
 pub struct HttpRequest {
     basic_info: BasicInfo,
 }
