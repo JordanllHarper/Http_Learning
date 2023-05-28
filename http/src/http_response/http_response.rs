@@ -1,33 +1,39 @@
+#[derive(Debug, Hash, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
     OK,
-    ERROR,
+    INTERNALSERVERERROR,
     NOTFOUND,
 }
 
+#[derive(Debug, Hash, Clone, Copy, PartialEq, Eq)]
 pub enum ContentType {
     TextPlain,
     TextHtml,
 }
 pub struct HttpResponse {
-    http_response_basic_info: HttpResponseBasicInfo,
-    content_length: i32,
-    content_type: ContentType,
+    pub http_response_basic_info: HttpResponseBasicInfo,
+
+    pub content_length: i32,
+    pub content_type: ContentType,
+    pub content: String,
 }
 pub struct HttpResponseBasicInfo {
-    version: String,
-    status_code: i32,
-    status: Status,
+    pub version: String,
+    pub status_code: i32,
+    pub status: Status,
 }
 impl HttpResponse {
     pub fn new(
         http_response_basic_info: HttpResponseBasicInfo,
         content_length: i32,
         content_type: ContentType,
+        content: String,
     ) -> HttpResponse {
         HttpResponse {
             http_response_basic_info,
             content_length,
             content_type,
+            content,
         }
     }
 }

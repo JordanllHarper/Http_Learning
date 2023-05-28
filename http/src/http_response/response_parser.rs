@@ -2,6 +2,7 @@ pub mod parser {
     use crate::{
         errors::error_decl::{HttpResponseBuildError, InvalidBasicInfoError},
         http_response::http_response::{ContentType, HttpResponse, HttpResponseBasicInfo, Status},
+        status_mapper::status_mapper::StatusMapper,
     };
 
     pub fn parse(input: &str) -> Result<HttpResponse, HttpResponseBuildError> {
@@ -32,8 +33,9 @@ pub mod parser {
                 ))
             }
         };
+        let content = split[4].to_string();
 
-        let response = HttpResponse::new(basic_info, content_length, content_type);
+        let response = HttpResponse::new(basic_info, content_length, content_type, content);
 
         return Ok(response);
     }
@@ -63,9 +65,9 @@ pub mod parser {
             }
         };
         let status = split[2];
-        let status = match parse_status(status) {
-            Ok(v) => v,
-            Err(e) => return Err(e),
+        let status = match StatusMapper::new().map_to_status(&status.to_string()) {
+            Some(s) => s,
+            None => return Err(InvalidBasicInfoError::new("Invalid status".to_string())),
         };
         Ok(HttpResponseBasicInfo::new(
             version.to_string(),
@@ -80,13 +82,5 @@ pub mod parser {
         let code = str::parse::<i32>(code_str);
 
         code
-    }
-    pub fn parse_status(status_str: &str) -> Result<Status, InvalidBasicInfoError> {
-        match status_str {
-            "OK" => Ok(Status::OK),
-            "NOTFOUND" => Ok(Status::NOTFOUND),
-            "ERROR" => Ok(Status::ERROR),
-            _ => Err(InvalidBasicInfoError::new("Invalid status".to_string())),
-        }
     }
 }

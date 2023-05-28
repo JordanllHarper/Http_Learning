@@ -2,6 +2,7 @@ pub mod parser {
     use crate::{
         errors::error_decl::{HttpRequestBuildError, InvalidBasicInfoError},
         http_request::http_request::{BasicInfo, HttpRequest, Verb},
+        verb_mapper::{self, verb_mapper::VerbMapper},
     };
 
     pub fn parse(input: &str) -> Result<HttpRequest, HttpRequestBuildError> {
@@ -30,26 +31,17 @@ pub mod parser {
             ));
         }
 
-        let verb = match parse_verb(split[0]) {
-            Ok(v) => v,
-            Err(e) => return Err(e),
-        };
-
+        let verb_mapper = VerbMapper::new();
+        let verb = verb_mapper.map_to_verb(&split[0].to_string());
         let uri = split[1];
         //TODO: Parse out the version here -> make sure is correct
         let version = split[2];
 
-        Ok(BasicInfo::new(verb, uri.to_string(), version.to_string()))
-    }
-
-    pub fn parse_verb(input: &str) -> Result<Verb, InvalidBasicInfoError> {
-        match input {
-            "GET" => Ok(Verb::GET),
-            "POST" => Ok(Verb::POST),
-            "PUT" => Ok(Verb::PUT),
-            "DELETE" => Ok(Verb::DELETE),
-            _ => Err(InvalidBasicInfoError::new("Invalid verb input".to_string())),
-        }
+        Ok(BasicInfo::new(
+            verb.to_owned(),
+            uri.to_string(),
+            version.to_string(),
+        ))
     }
 }
 //
@@ -96,7 +88,7 @@ mod parser_tests {
     #[test]
     pub fn test_invalid_verb_parse() {
         let data = "OTHER";
-        let expected = InvalidBasicInfoError::new("Invalid basic info".to_string());
+        let expected = InvalidBasicInfoError::new("Invalid verb input".to_string());
         let actual = parse_verb(data).expect_err("Invalid basic info supplied");
         assert_eq!(expected, actual);
     }
@@ -113,7 +105,8 @@ mod parser_tests {
     pub fn test_invalid_request() {
         let data = "GET  /hello.txt HTTP/1.1";
 
-        let expected = InvalidBasicInfoError::new("Invalid url".to_string());
+        let expected =
+            InvalidBasicInfoError::new("Invalid number of arguments for request".to_string());
 
         let actual = parse_basic_info(data).expect_err("Invalid url - additional space");
         assert_eq!(actual, expected);
