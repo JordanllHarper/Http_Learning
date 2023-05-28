@@ -21,9 +21,11 @@ pub mod parser {
     pub fn parse_basic_info(input: &str) -> Result<BasicInfo, InvalidBasicInfoError> {
         let split: Vec<&str> = input.split(' ').collect();
 
-        //guard clause -> check all *required* info is supplied
+        //guard clause -> check all *required* info is supplied + no more
         if split.len() != 3 {
-            return Err(InvalidBasicInfoError::new());
+            return Err(InvalidBasicInfoError::new(
+                "Invalid number of arguments for request".to_string(),
+            ));
         }
 
         let verb = match parse_verb(split[0]) {
@@ -44,7 +46,7 @@ pub mod parser {
             "POST" => Ok(Verb::POST),
             "PUT" => Ok(Verb::PUT),
             "DELETE" => Ok(Verb::DELETE),
-            _ => Err(InvalidBasicInfoError::new()),
+            _ => Err(InvalidBasicInfoError::new("Invalid verb input".to_string())),
         }
     }
 }
@@ -91,7 +93,7 @@ mod parser_tests {
     #[test]
     pub fn test_invalid_verb_parse() {
         let data = "OTHER";
-        let expected = InvalidBasicInfoError::new();
+        let expected = InvalidBasicInfoError::new("Invalid basic info".to_string());
         let actual = parse_verb(data).expect_err("Invalid basic info supplied");
         assert_eq!(expected, actual);
     }
@@ -103,5 +105,14 @@ mod parser_tests {
         let expected = BasicInfo::new(Verb::GET, "/hello.txt".to_string(), "HTTP/1.1".to_string());
         let actual = parse_basic_info(data);
         assert_eq!(actual.unwrap(), expected);
+    }
+    #[test]
+    pub fn test_invalid_request() {
+        let data = "GET  /hello.txt HTTP/1.1";
+
+        let expected = InvalidBasicInfoError::new("Invalid url".to_string());
+
+        let actual = parse_basic_info(data).expect_err("Invalid url - additional space");
+        assert_eq!(actual, expected);
     }
 }
