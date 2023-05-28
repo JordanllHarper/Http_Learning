@@ -1,4 +1,4 @@
-use std::{error::Error, fmt, iter::FlatMap};
+use std::{error::Error, fmt};
 
 use super::error_decl::{HttpRequestBuildError, HttpResponseBuildError, InvalidBasicInfoError};
 

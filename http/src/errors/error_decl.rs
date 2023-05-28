@@ -1,14 +1,14 @@
 #[derive(Debug, PartialEq, Eq)]
 pub struct InvalidBasicInfoError {
-    message: String,
+    pub message: String,
 }
 
 #[derive(Debug)]
 pub struct HttpRequestBuildError {
-    message: String,
+    pub message: String,
 }
 
 #[derive(Debug)]
 pub struct HttpResponseBuildError {
-    message: String,
+    pub message: String,
 }
