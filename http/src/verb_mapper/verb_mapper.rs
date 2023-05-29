@@ -14,7 +14,7 @@ impl VerbMapper {
         VerbMapper { to_verb, to_string }
     }
     pub fn map_to_string(&self, verb: &Verb) -> Option<String> {
-        self.to_string.get(verb).copied()
+        self.to_string.get(verb).cloned()
     }
     pub fn map_to_verb(&self, verb_string: &String) -> Verb {
         self.to_verb[verb_string]

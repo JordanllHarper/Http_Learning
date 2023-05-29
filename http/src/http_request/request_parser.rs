@@ -1,8 +1,8 @@
 pub mod parser {
     use crate::{
         errors::error_decl::{HttpRequestBuildError, InvalidBasicInfoError},
-        http_request::http_request::{BasicInfo, HttpRequest, Verb},
-        verb_mapper::{self, verb_mapper::VerbMapper},
+        http_request::http_request::{BasicInfo, HttpRequest},
+        verb_mapper::verb_mapper::VerbMapper,
     };
 
     pub fn parse(input: &str) -> Result<HttpRequest, HttpRequestBuildError> {
@@ -60,38 +60,7 @@ mod parser_tests {
         http_request::http_request::{BasicInfo, Verb},
     };
 
-    use super::parser::{parse_basic_info, parse_verb};
-
-    #[test]
-    pub fn test_verb_parse() {
-        let data = "GET";
-
-        let expected = Verb::GET;
-
-        let actual = parse_verb(data).unwrap();
-        assert_eq!(expected, actual);
-
-        let data = "POST";
-        let expected = Verb::POST;
-        let actual = parse_verb(data).unwrap();
-        assert_eq!(expected, actual);
-        let data = "PUT";
-        let expected = Verb::PUT;
-        let actual = parse_verb(data).unwrap();
-        assert_eq!(expected, actual);
-        let data = "DELETE";
-        let expected = Verb::DELETE;
-        let actual = parse_verb(data).unwrap();
-        assert_eq!(expected, actual);
-    }
-
-    #[test]
-    pub fn test_invalid_verb_parse() {
-        let data = "OTHER";
-        let expected = InvalidBasicInfoError::new("Invalid verb input".to_string());
-        let actual = parse_verb(data).expect_err("Invalid basic info supplied");
-        assert_eq!(expected, actual);
-    }
+    use super::parser::parse_basic_info;
 
     #[test]
     pub fn test_basic_info_parse() {
