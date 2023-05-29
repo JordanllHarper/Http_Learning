@@ -12,3 +12,7 @@ pub struct HttpRequestBuildError {
 pub struct HttpResponseBuildError {
     pub message: String,
 }
+#[derive(Debug)]
+pub struct InvalidFormatError {
+    pub message: String,
+}

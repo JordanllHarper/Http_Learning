@@ -22,7 +22,7 @@ pub mod request_formatter {
 pub mod request_formatter_tests {
     use crate::http_request::http_request::{BasicInfo, HttpRequest, Verb};
 
-    use super::request_formatter::format;
+    use super::request_formatter::{self, format};
 
     #[test]
     pub fn test_format() {
@@ -32,6 +32,19 @@ pub mod request_formatter_tests {
         let expected = "GET / HTTP/1.1".to_string();
 
         let actual = format(data);
+        assert_eq!(expected, actual.unwrap());
+    }
+    #[test]
+    pub fn test_with_uri() {
+        let data = HttpRequest::new(BasicInfo::new(
+            Verb::GET,
+            "/hello.txt".to_string(),
+            "HTTP/1.1".to_string(),
+        ));
+
+        let expected = "GET /hello.txt HTTP/1.1".to_string();
+
+        let actual = request_formatter::format(data);
         assert_eq!(expected, actual.unwrap());
     }
 }

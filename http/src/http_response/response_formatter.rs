@@ -1,4 +1,4 @@
-pub mod ResponseFormatter {
+pub mod response_formatter {
     use crate::{
         content_type_mapper::content_type_mapper::ContentTypeMapper,
         http_response::http_response::{HttpResponse, HttpResponseBasicInfo},
@@ -68,7 +68,7 @@ pub mod response_formatter_tests {
         ContentType, HttpResponse, HttpResponseBasicInfo, Status,
     };
 
-    use super::ResponseFormatter;
+    use super::response_formatter;
 
     #[test]
     pub fn test_format() {
@@ -80,7 +80,7 @@ pub mod response_formatter_tests {
         );
 
         let expected = "200 OK HTTP/1.1\nContent-Type: text/plain\nContent-Length: 5\n\nHello";
-        let actual = ResponseFormatter::format(data);
+        let actual = response_formatter::format(data);
         assert_eq!(expected, actual.unwrap());
     }
 }

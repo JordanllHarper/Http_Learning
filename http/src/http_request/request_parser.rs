@@ -1,4 +1,4 @@
-pub mod parser {
+pub mod request_parser {
     use crate::{
         errors::error_decl::{HttpRequestBuildError, InvalidBasicInfoError},
         http_request::http_request::{BasicInfo, HttpRequest},
@@ -60,7 +60,7 @@ mod parser_tests {
         http_request::http_request::{BasicInfo, Verb},
     };
 
-    use super::parser::parse_basic_info;
+    use super::request_parser::parse_basic_info;
 
     #[test]
     pub fn test_basic_info_parse() {
