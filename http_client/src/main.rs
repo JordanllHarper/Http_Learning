@@ -22,13 +22,17 @@ fn main() -> std::io::Result<()> {
         "/".to_string(),
         "HTTP/1.1".to_string(),
     ));
+
     let request_formatted = match format(request) {
         Some(r) => r,
-        None => return Err(InvalidFormatError::new("Invalid format".to_string())),
+        None => {
+            println!("Something went wrong with the request formatting");
+            return Ok(());
+        }
     };
 
     println!("Sending message: {request_formatted}");
-    stream.write(request_formatted.as_bytes());
+    stream.write(request_formatted.as_bytes())?;
 
     stream.shutdown(std::net::Shutdown::Write)?;
 
@@ -37,7 +41,7 @@ fn main() -> std::io::Result<()> {
     let mut buf = vec![];
     stream.read_to_end(&mut buf)?;
     let message = std::str::from_utf8(&mut buf).unwrap();
-    println!("Received response: {message}. Parsing to http response. ");
+    println!("||| Incoming message |||\n {message}. \n ||| End of message |||\nParsing to http response. ");
     let response = response_parser::parser::parse(message);
 
     Ok(())
