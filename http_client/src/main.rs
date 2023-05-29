@@ -1,4 +1,5 @@
 use http::errors::error_decl::InvalidFormatError;
+use http::http_response::response_parser;
 use http::{
     self,
     http_request::{
@@ -25,18 +26,19 @@ fn main() -> std::io::Result<()> {
         Some(r) => r,
         None => return Err(InvalidFormatError::new("Invalid format".to_string())),
     };
+
+    println!("Sending message: {request_formatted}");
     stream.write(request_formatted.as_bytes());
 
     stream.shutdown(std::net::Shutdown::Write)?;
 
     println!("Sent message");
 
-    println!("Flushed. Waiting for response...");
-
     let mut buf = vec![];
     stream.read_to_end(&mut buf)?;
     let message = std::str::from_utf8(&mut buf).unwrap();
+    println!("Received response: {message}. Parsing to http response. ");
+    let response = response_parser::parser::parse(message);
 
-    println!("Received message {message}");
     Ok(())
 }
